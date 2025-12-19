@@ -4,6 +4,10 @@ import numpy as np
 from PIL import Image
 import os
 import plotly.graph_objects as go
+import requests
+
+MODEL_URL = "https://drive.google.com/drive/u/0/folders/166duzYY33XzOc4iCYJIrLKkg2nuNG5ro"
+MODEL_PATH = "model/acne-classifier.h5"
 
 # =========================
 # KONFIGURASI HALAMAN
@@ -56,10 +60,10 @@ st.markdown("""
 # =========================
 @st.cache_resource
 def load_model():
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    model_path = os.path.join(BASE_DIR, "..", "model", "acne_classifier.h5")
-    return tf.keras.models.load_model(model_path, compile=False)
-
+    if not os.path.exists(MODEL_PATH):
+        with open(MODEL_PATH, "wb") as f:
+            f.write(requests.get(MODEL_URL).content)
+    return tf.keras.models.load_models.load_model(MODEL_PATH)
 model = load_model()
 
 # WAJIB sama dengan training
